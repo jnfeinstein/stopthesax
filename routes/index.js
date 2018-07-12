@@ -43,6 +43,10 @@ function timeStr() {
   return moment().tz('America/Los_Angeles').format();
 }
 
+function ips(req) {
+  return req.header('CF-Connecting-IP') || req.ip;
+}
+
 router.get('/', (req, res) => {
   res.render('index', { txId: randomValueHex(8) });
 });
@@ -51,7 +55,7 @@ router.post('/halt', (req, res) => {
   text();
 
   addRow(1, {
-    ip: req.ip,
+    ip: ips(req),
     time: timeStr(),
     txId: req.body.txId,
     halt: true
@@ -62,7 +66,7 @@ router.post('/halt', (req, res) => {
 
 router.post('/feedback', (req, res) => {
   addRow(1, {
-    ip: req.ip,
+    ip: ips(req),
     time: timeStr(),
     txId: req.body.txId,
     loud: req.body.type === 'loud' ? true : undefined,
@@ -76,7 +80,7 @@ router.post('/feedback', (req, res) => {
 
 router.post('/contact', (req, res) => {
   addRow(1, {
-    ip: req.ip,
+    ip: ips(req),
     time: timeStr(),
     txId: req.body.txId,
     contact: req.body.contact

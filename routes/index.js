@@ -7,7 +7,8 @@ const config = require('../config');
 
 const twilioClient = new twilio(config.twilioAccontSid, config.twilioAuthToken);
 
-const textDelay = 15 * 60 * 1000; // ms
+const textDelayMin = 60;
+const textDelayMs = textDelayMin * 60 * 1000;
 let lastTextedAt = null;
 
 function randomValueHex (len) {
@@ -17,16 +18,10 @@ function randomValueHex (len) {
     .slice(0,len);   // return required number of characters
 }
 
-router.get('/', function(req, res) {
-  res.render('index', { txId: randomValueHex(8) });
-});
-
-router.post('/halt', (req, res) => {
-  res.render('halt', { txId: req.body.txId });
-
+function text() {
   const now = new Date();
 
-  if (now - lastTextedAt >= textDelay) {
+  if (now - lastTextedAt >= textDelayMs) {
     console.log('Sending text');
 
     twilioClient.messages.create({
@@ -37,16 +32,29 @@ router.post('/halt', (req, res) => {
 
     lastTextedAt = now;
   } else {
-    const timeLeft = textDelay - (now - lastTextedAt);
+    const timeLeft = textDelayMs - (now - lastTextedAt);
     console.log(`Skipping text for ${timeLeft / 1000}s`);
   }
+}
+
+router.get('/', (req, res) => {
+  res.render('index', { txId: randomValueHex(8) });
+});
+
+router.post('/halt', (req, res) => {
+  res.render('halt', { txId: req.body.txId });
+  text();
 });
 
 router.post('/feedback', (req, res) => {
-  res.render('done');
+  res.redirect('/done');
 });
 
 router.post('/contact', (req, res) => {
+  res.redirect('/done');
+});
+
+router.get('/done', (req, res) => {
   res.render('done');
 });
 

@@ -1,0 +1,38 @@
+doctype html
+html
+    head
+        meta(http-equiv="Content-Type", content="text/html; charset=utf-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1")
+        title Stop The Sax!
+        script(src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js")
+        script(src="//cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/js/foundation.min.js")
+        script(src="javascripts/index.js")
+        link(href="css/style.css", rel="stylesheet", type="text/css")
+        link(href="//cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css" rel="stylesheet" type="text/css")
+        link(href="//fonts.googleapis.com/css?family=Lato:300,400,700,900,700italic|Open+Sans:700italic,400,600,300,700,800", rel="stylesheet", type="text/css")
+    body
+        div.grid-container.fluid
+            div.grid-x.grid-padding-x.align-center
+                div.cell.medium-6
+                    form(method="POST", action="halt")
+                        input(type="hidden" name="txId" value=txId)
+                        button(type="submit").button.large.danger.radius JUST STOP PLAYING!!!
+                    form(method="POST", action="feedback")
+                        input(type="hidden" name="txId" value=txId)
+                        fieldset
+                            h3 Or submit feedback...
+                            div
+                                input(type="radio", name="type" value="loud" required checked)#type_loud
+                                label(for="type_loud") Play softer
+                            div
+                                input(type="radio", name="type" value="soft")#type_soft
+                                label(for="type_soft") Play louder
+                            div
+                                input(type="radio", name="type" value="request")#type_request
+                                label(for="type_request") Song(s) Request
+                                input(type="text" name="request" placeholder="Which song?" disabled)#input_request
+                            div
+                                input(type="radio", name="type" value="other")#type_other
+                                label(for="type_other") Other
+                                input(type="text" name="other" placeholder="Anything you'd like!" disabled)#input_other
+                        button(type="submit").button.success Submit

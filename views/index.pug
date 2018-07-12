@@ -16,11 +16,11 @@ html
                 div.cell.medium-6
                     form(method="POST", action="halt")
                         input(type="hidden" name="txId" value=txId)
-                        button(type="submit").button.large.danger.radius JUST STOP PLAYING!!!
+                        button(type="submit" style="font-size:2rem;").button.large.danger CLICK THIS TO MAKE IT STOP
                     form(method="POST", action="feedback")
                         input(type="hidden" name="txId" value=txId)
                         fieldset
-                            h3 Or submit feedback...
+                            h4(style="margin-bottom:15px;") Or submit some helpful feedback
                             div
                                 input(type="radio", name="type" value="loud" required checked)#type_loud
                                 label(for="type_loud") Play softer

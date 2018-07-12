@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const request = require('request');
 const crypto = require('crypto');
 const twilio = require('twilio');
 const config = require('../config');
+const moment = require('moment-timezone')
+
+const { addRow } =  require("../google/sheets");
 
 const twilioClient = new twilio(config.twilioAccontSid, config.twilioAuthToken);
 
@@ -37,20 +39,49 @@ function text() {
   }
 }
 
+function timeStr() {
+  return moment().tz('America/Los_Angeles').format();
+}
+
 router.get('/', (req, res) => {
   res.render('index', { txId: randomValueHex(8) });
 });
 
 router.post('/halt', (req, res) => {
-  res.render('halt', { txId: req.body.txId });
   text();
+
+  addRow(1, {
+    ip: req.ip,
+    time: timeStr(),
+    txId: req.body.txId,
+    halt: true
+  });
+
+  res.render('halt', { txId: req.body.txId });
 });
 
 router.post('/feedback', (req, res) => {
+  addRow(1, {
+    ip: req.ip,
+    time: timeStr(),
+    txId: req.body.txId,
+    loud: req.body.type === 'loud' ? true : undefined,
+    soft: req.body.type === 'soft' ? true : undefined,
+    request: req.body.request,
+    other: req.body.other
+  });
+
   res.redirect('/done');
 });
 
 router.post('/contact', (req, res) => {
+  addRow(1, {
+    ip: req.ip,
+    time: timeStr(),
+    txId: req.body.txId,
+    contact: req.body.contact
+  });
+
   res.redirect('/done');
 });
 

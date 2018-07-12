@@ -56,5 +56,8 @@ app.use(function(err, req, res, next) {
   });
 });
 
+// for IPs
+app.enable('trust proxy')
+
 
 module.exports = app;
